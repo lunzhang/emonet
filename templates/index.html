@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+    <head>
+      <title>emotionnet</title>
+      <style>
+        body {
+          margin: 0;
+        }
+        video {
+          height: 100%;
+          width: 100%;
+        }
+      </style>
+    </head>
+    <body>
+      <video autoplay></video>
+      <script>
+        const video = document.querySelector('video');
+        navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {video.srcObject = stream});
+      </script>
+    </body>
+</html>

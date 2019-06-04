@@ -10,13 +10,36 @@
           height: 100%;
           width: 100%;
         }
+        #play-btn {
+          position: fixed;
+          top: 80%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
       </style>
     </head>
     <body>
       <video autoplay></video>
+      <div id="play-btn">
+        <svg height="100" width="100">
+          <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="white" fill-opacity="0.1" />
+        </svg>
+      </div>
       <script>
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
         const video = document.querySelector('video');
+        const playBtn = document.querySelector('#play-btn');
         navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {video.srcObject = stream});
+        playBtn.addEventListener('click', () => {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          canvas.drawImage(video, 0, 0);
+          fetch('/analysis', {
+            method: 'POST',
+            body: JSON.stringify(canvas.getImageData(0, 0, video.videoWidth, video.videoHeight))
+          });
+        });
       </script>
     </body>
 </html>

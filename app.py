@@ -1,3 +1,4 @@
+import json
 from flask import Flask, render_template, request
 from net import analysis
 
@@ -9,8 +10,9 @@ def main():
 
 @app.route('/analysis', methods=['POST'])
 def emotion():
-    result = analysis(request.data)
-    return result
+    data = request.get_json()
+    result = analysis(data)
+    return json.dumps(result)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

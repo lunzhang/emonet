@@ -1,5 +1,4 @@
-import json
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from net import analysis
 
 app = Flask(__name__)
@@ -12,7 +11,7 @@ def main():
 def emotion():
     data = request.get_json()
     result = analysis(data)
-    return json.dumps(result)
+    return jsonify(result)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

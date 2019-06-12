@@ -23,13 +23,15 @@ def analysis(data):
 	img = cv2.resize(img, (640, 360))
 	img = img[0:308,:]
 
-	gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+	rgb = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
+	gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
+
 	faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 	results = []
 	for (x,y,w,h) in faces:
 		if w > 130: #trick: ignore small faces
 			detected_face = img[int(y):int(y+h), int(x):int(x+w)] #crop detected face
-			detected_face = cv2.cvtColor(detected_face, cv2.COLOR_BGR2GRAY) #transform to gray scale
+			detected_face = cv2.cvtColor(detected_face, cv2.COLOR_RGB2GRAY) #transform to gray scale
 			detected_face = cv2.resize(detected_face, (48, 48)) #resize to 48x48
 
 			img_pixels = image.img_to_array(detected_face)

@@ -26,7 +26,6 @@ def analysis(data):
 	gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 	faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 	results = []
-
 	for (x,y,w,h) in faces:
 		if w > 130: #trick: ignore small faces
 			detected_face = img[int(y):int(y+h), int(x):int(x+w)] #crop detected face
@@ -39,5 +38,5 @@ def analysis(data):
 			img_pixels /= 255 #pixels are in scale of [0, 255]. normalize all pixels in scale of [0, 1]
 			with graph.as_default():
 				predictions = model.predict(img_pixels) #store probabilities of 7 expressions
-				results.append(predictions)
+				results.append(predictions.tolist())
 	return results

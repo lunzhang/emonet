@@ -16,6 +16,41 @@
           left: 50%;
           transform: translate(-50%, -50%);
         }
+        #emotion {
+          color: white;
+          position: fixed;
+          top: 20%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+        #loading {
+          display: none;
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 64px;
+          height: 64px;
+        }
+        #loading:after {
+          content: " ";
+          display: block;
+          width: 46px;
+          height: 46px;
+          margin: 1px;
+          border-radius: 50%;
+          border: 5px solid #fff;
+          border-color: #fff transparent #fff transparent;
+          animation: loading 1.2s linear infinite;
+        }
+        @keyframes loading {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
       </style>
     </head>
     <body>
@@ -25,13 +60,20 @@
           <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="white" fill-opacity="0.1" />
         </svg>
       </div>
+      <div id="emotion"></div>
+      <div id="loading"></div>
       <script>
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
         const video = document.querySelector('video');
         const playBtn = document.querySelector('#play-btn');
+        const emotionWrapper = document.querySelector('#emotion');
+        const loading = document.querySelector('#loading');
+        const emotions = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral'];
+
         navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {video.srcObject = stream});
         playBtn.addEventListener('click', () => {
+          loading.style.display = 'block';
           canvas.width = video.videoWidth;
           canvas.height = video.videoHeight;
           context.drawImage(video, 0, 0);
@@ -40,6 +82,19 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ data: [ ...data.data ], height: data.height, width: data.width })
+          }).then(resp => resp.json()).then(resp => {
+            const temp = resp[0];
+            if (temp) {
+              const max = Math.max(...temp[0]);
+              const index = temp[0].indexOf(max);
+              const emotion = emotions[index];
+              emotionWrapper.innerHTML = emotion;
+            } else {
+              emotionWrapper.innerHTML = 'No Face Found.  Try Again.';
+            }
+            loading.style.display = 'none';
+          }).catch(() => {
+            loading.style.display = 'none';
           });
         });
       </script>

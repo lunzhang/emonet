@@ -6,3 +6,5 @@ services:
       ['.:/app']
     environment:
       - PYTHONUNBUFFERED=True
+    ports:
+      - "3000:80"
